@@ -5,6 +5,7 @@ description = "Simple frontend for yt-dlp"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "ttkwidgets>=0.13.0",
     "yt-dlp>=2025.3.31",
 ]
 
