@@ -1,0 +1,8 @@
+[
+  // run python file using uv
+  {
+    "label": "Run main.py",
+    "command": "uv run main.py",
+    "hide": "always"
+  }
+]
