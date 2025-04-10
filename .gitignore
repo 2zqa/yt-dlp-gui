@@ -8,3 +8,6 @@ wheels/
 
 # Virtual environments
 .venv
+
+# https://github.com/pyinstaller/pyinstaller/issues/7492
+*.spec
