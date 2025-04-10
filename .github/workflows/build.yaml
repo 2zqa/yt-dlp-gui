@@ -25,7 +25,7 @@ jobs:
       - name: Zip
         run: zip -r ${{ matrix.config.artifact-name }}.zip dist/*
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.config.artifact-name }}
           path: dist/*
