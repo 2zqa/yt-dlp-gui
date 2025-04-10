@@ -1,0 +1,52 @@
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      matrix:
+        config:
+          - os: ubuntu-latest
+            artifact-name: linux
+          - os: macos-latest
+            artifact-name: macos
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - name: Build executable
+        run: uv run pyinstaller -F --windowed --name=${{ matrix.config.artifact-name }} main.py
+      - name: Zip
+        run: zip -r ${{ matrix.config.artifact-name }}.zip dist/*
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.config.artifact-name }}
+          path: dist/*
+
+  release:
+    needs: build
+    if: github.ref_type == 'tag'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # For creating a release
+    steps:
+      - name: Download All Artifacts
+        id: download
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          pattern: yt-dlp-gui-*
+          merge-multiple: true
+      - name: "Create Release"
+        uses: softprops/action-gh-release@v2
+        with:
+          fail_on_unmatched_files: true
+          draft: true
+          files: ${{ steps.download.outputs.download-path }}/* # Upload all files from the artifact
